@@ -1,0 +1,93 @@
+<!-- Inf -->
+<div class="row col-12 py-1 justify-content-center">
+  <h5 class="text-center">[Total Incomes : {{salaray| currency: "MXN":"$" }}]
+  </h5>
+</div>
+<!-- tabla -->
+<div class="container">
+  <div class="row justify-content-center">
+    <table class="table border border-3">
+      <thead>
+        <tr class="bg-light">
+          <th scope="col">#</th>
+          <th scope="col">Item</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Per Month</th>
+          <th scope="col">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of sortedlist; let i = index;"
+          [ngStyle]="{'background-color': list[i].isCover()? '#8cffae5e' : '#ec595991'}">
+          <th scope="row">{{ i + 1 }}</th>
+          <td>{{ list[i].name }}</td>
+          <td>{{ list[i].amount | currency: "MXN":"$" }}</td>
+          <td>{{ list[i].perMont | currency: "MXN":"$" }}</td>
+          <td>{{ list[i].income }} / {{ list[i].incomePerMonth }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <!-- Options -->
+  <div class="container">
+    <div class="row justify-content-center py-4">
+      <h5 class="text-center">
+        [ Your Total Debt is: {{ getSumAmount() | currency: "MXN":"$" }} ]
+      </h5>
+      <select class="form-select col-4" id="debtSelect">
+        <ng-container *ngFor="let debt of sortedlist">
+          <option *ngIf="!debt.isCover()" value={{debt.name}}>{{debt.name}}
+        </ng-container>
+      </select>
+
+      <select class="form-select col-4" id="billSelect">
+        <option *ngFor="let income of listIncome" value={{income.id}}>#{{ income.id}} {{income.name}}
+        </option>
+      </select>
+
+      <button type="button" class="btn btn-primary col-2" (click)="addDebt()">Add</button>
+
+    </div>
+  </div>
+</div>
+
+<h3 class="text-center text-danger">
+  You bill this month will be: {{ getSumPerMonth() | currency: "MXN":"$" }}
+</h3>
+
+
+<!-- tabla -->
+<section *ngFor="let income of listIncome; let i = index" id="data" class="col-12 border py-3">
+  <div id="acount" class="row">
+    <div class="col-4 margin-0 py-2 text-center">
+      <h5> #{{i+1}} {{income.name}}</h5>
+      <span>{{income.date}}</span>
+      <h3>
+        {{ income.amount | currency: "MXN":"$" }}
+      </h3>
+    </div>
+    <div class="col-4 margin-0 py-2 text-center">
+      <h5>Debts</h5>
+      <ul>
+        <li *ngFor="let debt of income.debtList; let i = index"> {{debt.name}} {{debt.perMonth | currency: "MXN":"$" }}
+        </li>
+      </ul>
+    </div>
+    <div class="col-4 margin-0 py-2 text-center">
+      <h5>Avaliable</h5>
+      <h3 class="text-success">
+        {{ income.avaliable | currency: "MXN":"$" }}
+      </h3>
+    </div>
+  </div>
+</section>
+
+<h3 class="text-center text-danger">
+  Debts to pay: {{ getSumPerMonth() | currency: "MXN":"$" }}
+</h3>
+<h3 class="text-center text-success">
+  You avaliable money this month will be: <u>{{ getFreeMonthly() | currency: "MXN":"$" }}</u>
+</h3>
+<h4 class="text-center">
+  Per week: <u>{{ getFreeMonthly()/5 | currency: "MXN":"$" }}</u> Aprox
+</h4>
